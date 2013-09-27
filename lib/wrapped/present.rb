@@ -94,4 +94,8 @@ class Present
   def ==(other)
     unwrap == other.unwrap_or(nil)
   end
+
+  def bind(&other)
+    other.call(unwrap)
+  end
 end

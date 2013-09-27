@@ -72,4 +72,8 @@ class Blank
   def ==(other)
     other.blank?
   end
+
+  def bind
+    self
+  end
 end

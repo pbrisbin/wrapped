@@ -195,3 +195,39 @@ describe Wrapped, 'equality' do
     1.wrapped.should_not == nil.wrapped
   end
 end
+
+describe Wrapped, 'monad' do
+  it 'handles an immediately Blank value' do
+    user = nil.wrapped
+
+    comment = user.bind(&:comments).bind(&:first)
+
+    comment.should be_blank
+  end
+
+  it 'handles a second Blank value' do
+    user = double(comments: blank_array).wrapped
+
+    comment = user.bind(&:comments).bind(&:first)
+
+    comment.should be_blank
+  end
+
+  it 'handles all values Present' do
+    user = double(comments: present_array(:comment)).wrapped
+
+    comment = user.bind(&:comments).bind(&:first)
+
+    comment.unwrap.should eq :comment
+  end
+
+  private
+
+  def blank_array
+    double(first: nil.wrapped).wrapped
+  end
+
+  def present_array(value)
+    double(first: value.wrapped).wrapped
+  end
+end
